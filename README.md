@@ -1,18 +1,20 @@
 # Agni's Empathy Builder
 
-This is a professional, standalone web application designed to help users develop empathy and "Theory of Mind" by analyzing complex social scenarios relevant to the Indian context.
+This is a professional, standalone web application designed to help users develop empathy and "Theory of Mind" through a process of **guided self-reflection**.
 
-## How it Works
+## The Methodology: Guided Self-Reflection
 
-1.  **Analyze a Neutral Situation:** The application presents a case study written in a neutral, third-person perspective.
-2.  **Receive Your Assignment:** After reading the case study, the user is assigned the role of one of the characters involved.
-3.  **Assume the Perspective:** The user's task is to write from the first-person ("I", "me") viewpoint of their assigned character, articulating that character's hidden fears, needs, and motivations.
-4.  **Receive a Personalized Analysis:** An advanced, local, rule-based analysis engine provides a detailed breakdown of the user's performance. It goes beyond simple keyword matching to analyze the structure and content of the response, highlighting specific successes and areas for improvement.
+This tool moves beyond simplistic, automated scoring. True empathy is nuanced and cannot be graded by a simple script. Instead, this application serves as a framework for you to analyze your own thought processes.
+
+1.  **Analyze a Neutral Case Study:** You will be presented with a situation written in a neutral, third-person perspective. This allows you to understand the facts of the scenario without immediate emotional bias.
+2.  **Receive Your Assignment:** After reading the case study, you will be assigned the role of one of the characters involved.
+3.  **Assume the Perspective:** Your task is to write from the first-person ("I", "me") viewpoint of your assigned character. The goal is to articulate what you believe are their hidden fears, needs, and motivations that lead to their actions.
+4.  **Compare and Reflect:** After submitting your take, the application will present your response directly alongside an **Expert Analysis**. By comparing your perspective with the expert breakdown of psychological drivers and common judgment traps, you can perform a meaningful self-assessment and identify your own empathetic blind spots.
 
 ## Features
 
 -   **Fully Offline & Deployable:** Runs entirely in the browser with no external API calls, making it fast, private, and easy to host on any static web server.
--   **Advanced Local Analysis:** Uses a sophisticated JavaScript-based engine for instant, personalized feedback that respects user privacy.
+-   **Focus on Self-Reflection:** The side-by-side comparison model encourages deeper learning and self-awareness instead of chasing a superficial score.
 -   **Expandable Scenarios:** The scenario library is stored in a separate, easy-to-edit `scenarios.js` file.
 -   **Professional UI:** Clean, responsive design that works on both desktop and mobile browsers.
 -   **Filtering & Search:** Users can easily find scenarios by category, difficulty, or keywords.
@@ -26,7 +28,7 @@ No build process or server is required. Simply open the `index.html` file in any
 The application is designed to be easily expandable.
 
 1.  **Open `scenarios.js`:** This file contains the entire library of scenarios.
-2.  **Add a New Scenario Object:** At the end of the `ALL_SCENARIOS` array, add a new JavaScript object.
+2.  **Add a New Scenario Object:** At the end of the `ALL_SCENARIOS` array, add a new JavaScript object following the existing structure.
 
 **Scenario Template:**
 ```javascript
@@ -40,8 +42,8 @@ The application is designed to be easily expandable.
     yourFeeling: "The initial, biased emotional reaction of the 'protagonist' in the situation.",
     otherAction: "The specific action taken by the empathy target.",
     idealPerspective: {
-        keywords: ["fear", "stress", "anxiety"], // Keywords for a good empathetic response
-        avoid: ["selfish", "lazy", "stupid"], // Judgmental words to avoid
+        keywords: ["fear", "stress", "anxiety"], // The core psychological drivers to be revealed in the analysis.
+        avoid: ["selfish", "lazy", "stupid"], // Common judgment traps to highlight.
         goal: "A short summary of the empathetic insight.",
         resolution: "An example of an ideal, empathy-informed response."
     }

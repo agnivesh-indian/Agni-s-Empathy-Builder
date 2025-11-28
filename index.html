@@ -12,22 +12,18 @@
         ::-webkit-scrollbar-thumb { background: #6b7280; border-radius: 10px; }
         ::-webkit-scrollbar-track { background: #e5e7eb; }
         .card-shadow { box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1), 0 5px 15px -3px rgba(0, 0, 0, 0.05); }
-        .spinner { border-top-color: transparent; }
     </style>
 </head>
 <body>
 
 <div id="app" class="min-h-screen p-4 sm:p-8 flex justify-center items-start pt-8">
-    <div class="w-full max-w-3xl bg-white card-shadow rounded-3xl p-6 sm:p-10 transition-all duration-300">
+    <div class="w-full max-w-4xl bg-white card-shadow rounded-3xl p-6 sm:p-10 transition-all duration-300">
         <header class="text-center mb-6 sm:mb-8">
             <h1 class="text-3xl sm:text-5xl font-extrabold text-emerald-700 tracking-tight">Agni's Empathy Builder</h1>
-            <p class="text-gray-500 mt-1 sm:mt-2 text-lg">A Professional Tool for Mastering Perspective</p>
+            <p class="text-gray-500 mt-1 sm:mt-2 text-lg">A Professional Tool for Guided Self-Reflection</p>
         </header>
         <div id="game-content">
-            <div class="text-center p-10">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500 mx-auto"></div>
-                <p class="text-gray-500 mt-3">Initializing Application...</p>
-            </div>
+            <div class="text-center p-10"><p class="text-gray-500 mt-3">Initializing Application...</p></div>
         </div>
         <div id="message-box" class="mt-6 p-3 bg-red-100 text-red-800 rounded-xl border border-red-300 hidden"></div>
     </div>
@@ -50,19 +46,10 @@
             case 'SELECTION': contentDiv.innerHTML = renderScenarioSelection(); break;
             case 'SITUATION': contentDiv.innerHTML = renderSituationScreen(currentScenario); break;
             case 'PERSPECTIVE_SWITCH': contentDiv.innerHTML = renderPerspectiveSwitchForm(currentScenario); break;
-            case 'FEEDBACK': contentDiv.innerHTML = renderFeedbackScreen(currentScenario); break;
-            case 'LOADING': contentDiv.innerHTML = renderLoadingScreen(); break;
+            case 'REFLECTION': contentDiv.innerHTML = renderReflectionScreen(currentScenario); break;
             default: contentDiv.innerHTML = renderWelcomeScreen();
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        if (currentPhase === 'SELECTION' && sessionStorage.getItem('needsRefocus') === 'true') {
-            const searchInput = document.getElementById('scenario-search');
-            if (searchInput) {
-                searchInput.focus();
-                searchInput.selectionStart = searchInput.selectionEnd = searchInput.value.length; 
-                sessionStorage.removeItem('needsRefocus');
-            }
-        }
     }
 
     function renderWelcomeScreen() {
@@ -70,14 +57,14 @@
             <div class="space-y-6">
                 <h2 class="text-2xl font-bold text-center text-emerald-700">A Professional's Guide to Empathy</h2>
                 <div class="bg-emerald-50 p-5 rounded-xl border border-emerald-200">
-                    <p class="font-semibold text-xl text-emerald-800 mb-3">The Goal: Master Decentering</p>
-                    <p class="text-gray-700">In high-stakes communication, the ability to <b>decenter</b>—to accurately understand the perspective of another person—is a critical skill. This tool is designed to train that ability using realistic scenarios.</p>
+                    <p class="font-semibold text-xl text-emerald-800 mb-3">The Goal: Master Decentering Through Self-Reflection</p>
+                    <p class="text-gray-700">This tool helps you practice the critical skill of <b>decentering</b>—stepping outside your own viewpoint to accurately understand another's. Instead of a simplistic score, this tool provides a framework for <b>guided self-reflection</b>.</p>
                 </div>
                 <ol class="list-decimal list-inside space-y-4 text-gray-700 p-4">
                     <li><b class="text-gray-800">Analyze a Neutral Situation:</b> You will be presented with a case study written in the third person.</li>
-                    <li><b class="text-gray-800">Receive Your Assignment:</b> After reading the situation, you will be assigned the role of one of the characters involved.</li>
-                    <li><b class="text-gray-800">Assume the Perspective:</b> Write from the viewpoint of your assigned character. Use "I" and "me" to articulate their fears, needs, and motivations.</li>
-                    <li><b class="text-gray-800">Receive a Personalized Analysis:</b> Our advanced local engine will provide a detailed breakdown of your performance, highlighting successes and areas for improvement.</li>
+                    <li><b class="text-gray-800">Receive Your Assignment:</b> After reading the situation, you will be assigned the role of one of the characters.</li>
+                    <li><b class="text-gray-800">Assume the Perspective:</b> Write from the viewpoint of your assigned character, articulating what you believe are their fears, needs, and motivations.</li>
+                    <li><b class="text-gray-800">Compare and Reflect:</b> Your response will be shown side-by-side with an expert analysis, allowing you to discover your own blind spots and identify key empathetic insights.</li>
                 </ol>
                 <button onclick="changePhase('SELECTION')" class="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:bg-emerald-700 transition duration-150 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-300">Begin Training →</button>
             </div>
@@ -136,10 +123,6 @@
             </div>
         `;
     }
-    
-    function renderLoadingScreen() {
-        return `<div class="text-center p-10 space-y-4"><div class="spinner animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-emerald-500 mx-auto"></div><h2 class="text-2xl font-bold text-gray-800">Running Analysis...</h2><p class="text-gray-600">The local analysis engine is processing your response.</p></div>`;
-    }
 
     function renderPerspectiveSwitchForm(scenario) {
         return `
@@ -151,51 +134,68 @@
                     <div class="mb-6 bg-emerald-50 p-4 rounded-xl border-l-4 border-emerald-400">
                         <label class="block text-lg font-bold text-gray-700 mb-2">1. What is my core fear, need, or motivation?</label>
                         <textarea id="task-story" name="task-story" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" rows="4" placeholder="As the ${scenario.empathyTarget}, I feel... because I am afraid of..."></textarea>
-                        <p class="text-sm text-gray-500 mt-1">Focus on situational pressures, not personality flaws.</p>
                     </div>
                     <div class="mb-6 bg-emerald-50 p-4 rounded-xl border-l-4 border-emerald-400">
                         <label class="block text-lg font-bold text-gray-700 mb-2">2. From my perspective, why is my action justified?</label>
                         <textarea id="task-validation" name="task-validation" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" rows="3" placeholder="My action makes sense to me because it is the only way to..."></textarea>
-                        <p class="text-sm text-gray-500 mt-1">Explain the rationalization that makes the action seem necessary to them.</p>
                     </div>
-                    <button type="submit" id="submit-button" class="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:bg-emerald-700 transition duration-150 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-300">Submit for Analysis</button>
+                    <button type="submit" id="submit-button" class="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:bg-emerald-700 transition duration-150 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-300">Reveal & Compare</button>
                 </form>
             </div>
         `;
     }
     
-    function renderFeedbackScreen(scenario) {
-        const score = parseInt(sessionStorage.getItem(`score-${scenario.id}`) || '0', 10);
-        const analysis = JSON.parse(sessionStorage.getItem(`analysis-${scenario.id}`) || '{}');
-        const { positives = [], areasForImprovement = [] } = analysis;
-        const resolution = scenario.idealPerspective.resolution;
-        const goal = scenario.idealPerspective.goal;
-
-        let scoreColor, title;
-        if (score >= 80) { scoreColor = 'text-green-600'; title = '🎯 Excellent Decentering!'; }
-        else if (score >= 50) { scoreColor = 'text-amber-600'; title = '✨ Good Effort, Needs More Depth.'; }
-        else { scoreColor = 'text-red-600'; title = '💡 Room for Improvement.'; }
+    function renderReflectionScreen(scenario) {
+        const userStory = sessionStorage.getItem(`story-${scenario.id}`) || "You did not provide a response.";
+        const userValidation = sessionStorage.getItem(`validation-${scenario.id}`) || "You did not provide a response.";
+        const { keywords, avoid, goal, resolution } = scenario.idealPerspective;
 
         return `
-            <div class="space-y-6 text-center">
-                <h2 class="text-3xl font-bold text-emerald-700">${title}</h2>
-                <p class="text-xl text-gray-700">Empathy Score: <span class="text-4xl font-extrabold ${scoreColor}">${score}%</span></p>
-                <div class="text-left space-y-4">
-                    <h3 class="font-bold text-xl text-gray-800 text-center border-b pb-2">Performance Analysis</h3>
-                    <div class="p-5 bg-green-50 border-l-4 border-green-500 rounded-xl">
-                        <h4 class="font-bold text-lg text-green-800 mb-2">Positives</h4>
-                        <ul class="list-disc list-inside text-green-900 space-y-1">${positives.length > 0 ? positives.map(p => `<li>${p}</li>`).join('') : '<li>No specific positives identified in this analysis.</li>'}</ul>
+            <div class="space-y-8">
+                <h2 class="text-3xl font-bold text-center text-emerald-700">Self-Reflection</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- User's Perspective -->
+                    <div class="p-5 bg-gray-50 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-xl text-gray-800 mb-3">Your Submitted Perspective</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold text-gray-700">Core Motivation:</h4>
+                                <p class="text-gray-600 italic whitespace-pre-wrap">"${userStory}"</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-700">Justification:</h4>
+                                <p class="text-gray-600 italic whitespace-pre-wrap">"${userValidation}"</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="p-5 bg-red-50 border-l-4 border-red-500 rounded-xl">
-                        <h4 class="font-bold text-lg text-red-800 mb-2">Areas for Improvement</h4>
-                        <ul class="list-disc list-inside text-red-900 space-y-1">${areasForImprovement.length > 0 ? areasForImprovement.map(a => `<li>${a}</li>`).join('') : '<li>No specific areas for improvement identified. Great work!</li>'}</ul>
+
+                    <!-- Expert Analysis -->
+                    <div class="p-5 bg-emerald-50 rounded-xl border-l-4 border-emerald-500">
+                        <h3 class="font-bold text-xl text-emerald-800 mb-3">Expert Analysis & Insights</h3>
+                        <div class="space-y-4 text-sm">
+                            <div>
+                                <h4 class="font-semibold text-emerald-700">Primary Drivers:</h4>
+                                <p>The character's actions were likely driven by feelings of <b>${keywords.join(", ")}</b>.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-emerald-700">Common Judgment Trap:</h4>
+                                <p>A common, less empathetic view is to label this character as <b>${avoid.join(" or ")}</b>. The goal is to move past this initial judgment.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-emerald-700">Empathetic Goal:</h4>
+                                <p>${goal}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Ideal Resolution -->
                 <div class="p-5 sm:p-6 bg-indigo-50 border-l-4 border-indigo-600 rounded-xl text-left shadow-lg">
                     <p class="font-bold text-xl text-indigo-800 mb-2">Actionable Strategy: An Empathy-Informed Response</p>
-                    <p class="text-sm text-indigo-700 italic mb-2">An effective response addresses the other person's underlying goal: <b>${goal}</b></p>
-                    <p class="text-gray-700"><b>Example Response:</b> "${resolution}"</p>
+                    <p class="text-gray-700">An effective response addresses the underlying need. For example: <b>"${resolution}"</b></p>
                 </div>
+                
                 <button onclick="changePhase('SELECTION')" class="w-full py-3 px-4 mt-4 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition duration-150 transform focus:outline-none focus:ring-4 focus:ring-emerald-300">← Back to Scenario Library</button>
             </div>
         `;
@@ -230,68 +230,7 @@
         renderApp();
     }
 
-    /**
-     * [FINAL UPGRADE] Advanced local analysis engine.
-     * Provides personalized, descriptive feedback without external APIs.
-     */
-    async function calculateEmpathyScore(scenario, story, validation) {
-        await new Promise(resolve => setTimeout(resolve, 750));
-
-        const userInput = (story + " " + validation).toLowerCase();
-        let score = 0;
-        let analysis = { positives: [], areasForImprovement: [] };
-
-        // 1. Perspective Check (Structural Analysis)
-        if (!userInput.includes(' i ') && !userInput.includes(' my ') && !userInput.includes(' me ')) {
-            analysis.areasForImprovement.push(`<b>Perspective Error:</b> You did not write from the first-person ("I", "me") perspective. The goal is to inhabit the character, not describe them.`);
-        } else {
-            analysis.positives.push(`<b>Correct Perspective:</b> You successfully wrote from the first-person perspective of the assigned character.`);
-        }
-
-        // 2. Depth of Insight (50 points)
-        const idealKeywords = scenario.idealPerspective.keywords;
-        let foundKeywords = idealKeywords.filter(kw => userInput.includes(kw.toLowerCase()));
-        let depthScore = Math.min(50, (foundKeywords.length / (idealKeywords.length / 1.5)) * 50);
-        score += depthScore;
-
-        if (depthScore > 40) {
-            analysis.positives.push(`<b>Excellent Insight:</b> Your response correctly identified core motivations like <b>"${foundKeywords[0]}"</b> and <b>"${foundKeywords[1]}"</b>.`);
-        } else if (depthScore > 20) {
-            analysis.positives.push(`<b>Good Start:</b> You touched on some of the underlying issues.`);
-            analysis.areasForImprovement.push(`<b>Go Deeper:</b> To improve, focus more on the character's specific situational fears, such as <b>"${idealKeywords[0]}"</b> or <b>"${idealKeywords[1]}"</b>.`);
-        } else {
-            analysis.areasForImprovement.push(`<b>Lacks Depth:</b> Your analysis was superficial. The key is to uncover hidden pressures like <b>"${idealKeywords[0]}"</b>, rather than just describing the character's actions.`);
-        }
-
-        // 3. Freedom from Bias (30 points)
-        const avoidKeywords = scenario.idealPerspective.avoid;
-        let foundAvoids = avoidKeywords.filter(kw => userInput.includes(kw.toLowerCase()));
-        let biasScore = 30 - (foundAvoids.length * 20);
-        biasScore = Math.max(0, biasScore);
-        score += biasScore;
-
-        if (foundAvoids.length > 0) {
-            analysis.areasForImprovement.push(`<b>Biased Language Detected:</b> You used judgmental words like <b>"${foundAvoids.join('", "')}"</b>. This shows you are still judging the character's personality instead of understanding their situation.`);
-        } else {
-            analysis.positives.push(`<b>Objective Analysis:</b> You successfully avoided judgmental language and focused on the situation.`);
-        }
-
-        // 4. Clarity & Rationality (20 points)
-        let clarityScore = 10;
-        if (story.length > 25 && validation.length > 25) clarityScore += 10;
-        score += clarityScore;
-        if (clarityScore < 20) {
-            analysis.areasForImprovement.push(`<b>Be More Descriptive:</b> Your responses were brief. Elaborate more on the character's internal thoughts to build a stronger, more believable justification.`);
-        } else {
-            analysis.positives.push(`<b>Clear Articulation:</b> Your response was well-articulated and provided a clear line of reasoning for the character's actions.`);
-        }
-
-        score = Math.round(Math.max(0, Math.min(100, score)));
-
-        return { score, analysis };
-    }
-
-    async function handlePerspectiveSubmit(event) {
+    function handlePerspectiveSubmit(event) {
         event.preventDefault();
         const form = event.target;
         const storyInput = form.elements['task-story'].value.trim();
@@ -300,26 +239,20 @@
             showMessage("Please complete both analysis tasks before submitting.", 'error');
             return;
         }
-        changePhase('LOADING'); 
-        try {
-            const { score, analysis } = await calculateEmpathyScore(currentScenario, storyInput, validationInput);
-            sessionStorage.setItem(`score-${currentScenario.id}`, score);
-            sessionStorage.setItem(`analysis-${currentScenario.id}`, JSON.stringify(analysis));
-            changePhase('FEEDBACK');
-        } catch (error) {
-            showMessage(`An error occurred during analysis: ${error.message}`, 'error');
-            changePhase('PERSPECTIVE_SWITCH'); 
-        }
+        
+        // Store user's input for the reflection screen
+        sessionStorage.setItem(`story-${currentScenario.id}`, storyInput);
+        sessionStorage.setItem(`validation-${currentScenario.id}`, validationInput);
+
+        changePhase('REFLECTION');
     }
 
     function showMessage(message, type = 'error') {
         const msgBox = document.getElementById('message-box');
         msgBox.textContent = message;
-        msgBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'border-red-300', 'bg-blue-100', 'text-blue-800', 'border-blue-300');
+        msgBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'border-red-300');
         if (type === 'error') {
             msgBox.classList.add('bg-red-100', 'text-red-800', 'border-red-300');
-        } else {
-            msgBox.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-300');
         }
         setTimeout(() => msgBox.classList.add('hidden'), 5000);
     }
