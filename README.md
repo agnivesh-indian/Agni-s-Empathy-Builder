@@ -4,19 +4,15 @@ This is a professional, standalone web application designed to help users develo
 
 ## How it Works
 
-The application presents users with various social, professional, and familial conflict scenarios. The user is asked to step into the shoes of a specific character in the scenario and articulate their perspective.
-
-An advanced, local, rule-based analysis engine then scores the user's response based on:
-1.  **Depth of Insight:** How well the user identifies the underlying fears, needs, and situational pressures of the character.
-2.  **Freedom from Bias:** Whether the user avoids judgmental or biased language.
-3.  **Clarity & Rationality:** The overall coherence and believability of the response from the character's point of view.
-
-The application provides a detailed analysis with a score, a list of positives, and specific areas for improvement to help the user master the skill of "decentering."
+1.  **Analyze a Neutral Situation:** The application presents a case study written in a neutral, third-person perspective.
+2.  **Receive Your Assignment:** After reading the case study, the user is assigned the role of one of the characters involved.
+3.  **Assume the Perspective:** The user's task is to write from the first-person ("I", "me") viewpoint of their assigned character, articulating that character's hidden fears, needs, and motivations.
+4.  **Receive a Personalized Analysis:** An advanced, local, rule-based analysis engine provides a detailed breakdown of the user's performance. It goes beyond simple keyword matching to analyze the structure and content of the response, highlighting specific successes and areas for improvement.
 
 ## Features
 
--   **Fully Offline & Deployable:** Runs entirely in the browser with no external API calls, making it fast, private, and easy to host.
--   **Advanced Local Analysis:** Uses a sophisticated JavaScript-based engine for instant, detailed feedback.
+-   **Fully Offline & Deployable:** Runs entirely in the browser with no external API calls, making it fast, private, and easy to host on any static web server.
+-   **Advanced Local Analysis:** Uses a sophisticated JavaScript-based engine for instant, personalized feedback that respects user privacy.
 -   **Expandable Scenarios:** The scenario library is stored in a separate, easy-to-edit `scenarios.js` file.
 -   **Professional UI:** Clean, responsive design that works on both desktop and mobile browsers.
 -   **Filtering & Search:** Users can easily find scenarios by category, difficulty, or keywords.
@@ -39,10 +35,10 @@ The application is designed to be easily expandable.
     title: "Your New Scenario Title",
     category: "Family & Home", // Must be one of the existing categories
     difficulty: "Easy", // "Easy", "Medium", or "Hard"
-    empathyTarget: "The character to empathize with", // e.g., "Your colleague", "The shopkeeper"
-    situation: "A detailed description of the situation from the user's point of view.",
-    yourFeeling: "The user's initial, biased emotional reaction.",
-    otherAction: "The specific action the other person took.",
+    empathyTarget: "The character to empathize with", // e.g., "The colleague", "The shopkeeper"
+    situation: "A detailed, third-person description of the situation.",
+    yourFeeling: "The initial, biased emotional reaction of the 'protagonist' in the situation.",
+    otherAction: "The specific action taken by the empathy target.",
     idealPerspective: {
         keywords: ["fear", "stress", "anxiety"], // Keywords for a good empathetic response
         avoid: ["selfish", "lazy", "stupid"], // Judgmental words to avoid

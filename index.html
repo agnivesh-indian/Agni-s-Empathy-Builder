@@ -4,16 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agni's Empathy Builder</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Use Inter font family for a clean, modern look -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7fafc; /* Very light, warm background */
-        }
-        /* Custom scrollbar for a cleaner look */
+        body { font-family: 'Inter', sans-serif; background-color: #f7fafc; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-thumb { background: #6b7280; border-radius: 10px; }
         ::-webkit-scrollbar-track { background: #e5e7eb; }
@@ -24,48 +18,30 @@
 <body>
 
 <div id="app" class="min-h-screen p-4 sm:p-8 flex justify-center items-start pt-8">
-
     <div class="w-full max-w-3xl bg-white card-shadow rounded-3xl p-6 sm:p-10 transition-all duration-300">
-        <!-- Header -->
         <header class="text-center mb-6 sm:mb-8">
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-emerald-700 tracking-tight">
-                Agni's Empathy Builder
-            </h1>
-            <p class="text-gray-500 mt-1 sm:mt-2 text-lg">
-                A Professional Tool for Mastering Perspective
-            </p>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-emerald-700 tracking-tight">Agni's Empathy Builder</h1>
+            <p class="text-gray-500 mt-1 sm:mt-2 text-lg">A Professional Tool for Mastering Perspective</p>
         </header>
-
-        <!-- Main Content Area (Dynamic based on phase) -->
         <div id="game-content">
-            <!-- Initial loading message -->
             <div class="text-center p-10">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500 mx-auto"></div>
                 <p class="text-gray-500 mt-3">Initializing Application...</p>
             </div>
         </div>
-
-        <!-- Feedback/Message Box -->
         <div id="message-box" class="mt-6 p-3 bg-red-100 text-red-800 rounded-xl border border-red-300 hidden"></div>
     </div>
 </div>
 
 <script type="module">
-    // --- Main Application Logic ---
     import { ALL_SCENARIOS } from './scenarios.js';
 
     let currentPhase = 'WELCOME';
     let currentScenario = null;
     
-    const CATEGORIES = [
-        "All", "Family & Home", "Workplace & Professional", "Social & Ethical", "Generational Conflict", 
-        "Academic Pressure", "Financial Strain", "Gender & Identity", "Digital & Online Behavior", 
-        "Health & Eldercare", "Migration & Relocation", "Public Space Etiquette", "Caste & Privilege Dynamics", 
-        "Consumer & Service Issues", "Environmental & Civic Duty", "Relationship & Marital Stress"
-    ];
+    const CATEGORIES = Array.from(new Set(ALL_SCENARIOS.map(s => s.category)));
+    CATEGORIES.unshift("All");
     const DIFFICULTIES = ["All", "Easy", "Medium", "Hard"];
-
-    // --- Core UI Rendering Functions ---
 
     function renderApp() {
         const contentDiv = document.getElementById('game-content');
@@ -97,18 +73,13 @@
                     <p class="font-semibold text-xl text-emerald-800 mb-3">The Goal: Master Decentering</p>
                     <p class="text-gray-700">In high-stakes communication, the ability to <b>decenter</b>—to accurately understand the perspective of another person—is a critical skill. This tool is designed to train that ability using realistic scenarios.</p>
                 </div>
-                
                 <ol class="list-decimal list-inside space-y-4 text-gray-700 p-4">
-                    <li><b class="text-gray-800">Select a Scenario:</b> Choose a conflict. Each is a detailed case study of a common social or professional challenge.</li>
-                    <li><b class="text-gray-800">Acknowledge Your Bias:</b> The scenario will outline your initial emotional reaction. This is your bias—the starting point you must overcome.</li>
-                    <li><b class="text-gray-800">Assume the Perspective:</b> You will be instructed to write from the viewpoint of a specific character. Use "I" and "me" to articulate their fears, needs, and motivations.</li>
-                    <li><b class="text-gray-800">Receive an In-Depth Analysis:</b> Our advanced local engine will analyze your response, providing a detailed breakdown of your performance, including positives and areas for improvement.</li>
+                    <li><b class="text-gray-800">Analyze a Neutral Situation:</b> You will be presented with a case study written in the third person.</li>
+                    <li><b class="text-gray-800">Receive Your Assignment:</b> After reading the situation, you will be assigned the role of one of the characters involved.</li>
+                    <li><b class="text-gray-800">Assume the Perspective:</b> Write from the viewpoint of your assigned character. Use "I" and "me" to articulate their fears, needs, and motivations.</li>
+                    <li><b class="text-gray-800">Receive a Personalized Analysis:</b> Our advanced local engine will provide a detailed breakdown of your performance, highlighting successes and areas for improvement.</li>
                 </ol>
-
-                <button onclick="changePhase('SELECTION')"
-                    class="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:bg-emerald-700 transition duration-150 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-300">
-                    Begin Training →
-                </button>
+                <button onclick="changePhase('SELECTION')" class="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:bg-emerald-700 transition duration-150 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-300">Begin Training →</button>
             </div>
         `;
     }
@@ -130,106 +101,64 @@
 
         const scenarioList = filteredScenarios.map(s => {
             let difficultyColor = s.difficulty === 'Hard' ? 'bg-red-500' : s.difficulty === 'Medium' ? 'bg-amber-500' : 'bg-green-500';
-            return `
-                <button onclick="startScenario(${s.id})" class="w-full text-left p-4 my-2 border border-gray-200 rounded-xl hover:bg-emerald-50 transition duration-150 ease-in-out flex justify-between items-center shadow-sm hover:shadow-md">
-                    <div>
-                        <p class="font-semibold text-gray-800">${s.title}</p>
-                        <p class="text-xs text-gray-500">${s.category}</p>
-                    </div>
-                    <span class="text-white text-xs font-bold px-3 py-1 rounded-full ${difficultyColor}">${s.difficulty}</span>
-                </button>
-            `;
+            return `<button onclick="startScenario(${s.id})" class="w-full text-left p-4 my-2 border border-gray-200 rounded-xl hover:bg-emerald-50 transition duration-150 ease-in-out flex justify-between items-center shadow-sm hover:shadow-md">
+                        <div><p class="font-semibold text-gray-800">${s.title}</p><p class="text-xs text-gray-500">${s.category}</p></div>
+                        <span class="text-white text-xs font-bold px-3 py-1 rounded-full ${difficultyColor}">${s.difficulty}</span>
+                    </button>`;
         }).join('');
 
         return `
             <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Scenario Library (${filteredScenarios.length} matching)</h2>
-            <button onclick="changePhase('WELCOME')" class="text-sm font-medium text-emerald-500 hover:text-emerald-700 transition duration-150 flex items-center mb-4">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Back to Instructions
-            </button>
-            <div class="mb-4">
-                <label for="scenario-search" class="block text-sm font-medium text-gray-700">Search Scenarios:</label>
-                <input type="text" id="scenario-search" value="${currentSearch}" oninput="filterScenarios(true)" placeholder="e.g., 'manager', 'loan', 'privacy'..." class="mt-1 block w-full pl-4 pr-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md shadow-sm">
-            </div>
+            <button onclick="changePhase('WELCOME')" class="text-sm font-medium text-emerald-500 hover:text-emerald-700 transition duration-150 flex items-center mb-4"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>Back to Instructions</button>
+            <div class="mb-4"><label for="scenario-search" class="block text-sm font-medium text-gray-700">Search Scenarios:</label><input type="text" id="scenario-search" value="${currentSearch}" oninput="filterScenarios(true)" placeholder="e.g., 'manager', 'loan', 'privacy'..." class="mt-1 block w-full pl-4 pr-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md shadow-sm"></div>
             <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
-                <div class="w-full sm:w-1/2">
-                    <label for="category-filter" class="block text-sm font-medium text-gray-700">Filter by Category:</label>
-                    <select id="category-filter" onchange="filterScenarios()" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md shadow-sm">${categoryOptions}</select>
-                </div>
-                <div class="w-full sm:w-1/2">
-                    <label for="difficulty-filter" class="block text-sm font-medium text-gray-700">Filter by Difficulty:</label>
-                    <select id="difficulty-filter" onchange="filterScenarios()" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md shadow-sm">${difficultyOptions}</select>
-                </div>
+                <div class="w-full sm:w-1/2"><label for="category-filter" class="block text-sm font-medium text-gray-700">Filter by Category:</label><select id="category-filter" onchange="filterScenarios()" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md shadow-sm">${categoryOptions}</select></div>
+                <div class="w-full sm:w-1/2"><label for="difficulty-filter" class="block text-sm font-medium text-gray-700">Filter by Difficulty:</label><select id="difficulty-filter" onchange="filterScenarios()" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md shadow-sm">${difficultyOptions}</select></div>
             </div>
-            <div class="max-h-96 overflow-y-auto pr-2">${filteredScenarios.length > 0 ? scenarioList : '<p class="text-center text-gray-500 p-8">No scenarios match your criteria.</p>'}</div>
-        `;
+            <div class="max-h-96 overflow-y-auto pr-2">${filteredScenarios.length > 0 ? scenarioList : '<p class="text-center text-gray-500 p-8">No scenarios match your criteria.</p>'}</div>`;
     }
 
     function renderSituationScreen(scenario) {
         let difficultyColor = scenario.difficulty === 'Hard' ? 'text-red-600' : scenario.difficulty === 'Medium' ? 'text-amber-600' : 'text-green-600';
         return `
             <div class="space-y-6">
-                <button onclick="changePhase('SELECTION')" class="text-sm font-medium text-emerald-500 hover:text-emerald-700 transition duration-150 flex items-center mb-4">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    Back to Scenario Library
-                </button>
+                <button onclick="changePhase('SELECTION')" class="text-sm font-medium text-emerald-500 hover:text-emerald-700 transition duration-150 flex items-center mb-4"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>Back to Scenario Library</button>
                 <h2 class="text-2xl font-bold text-gray-800">${scenario.title}</h2>
-                <div class="flex justify-between text-sm text-gray-500">
-                    <span class="font-medium text-emerald-600">${scenario.category}</span>
-                    <span class="font-bold ${difficultyColor}">${scenario.difficulty}</span>
-                </div>
-                <div class="p-5 bg-emerald-50 border-l-4 border-emerald-500 rounded-lg shadow-inner">
-                    <p class="font-bold text-emerald-800 mb-1">Case Briefing (Your Perspective):</p>
+                <div class="flex justify-between text-sm text-gray-500"><span class="font-medium text-emerald-600">${scenario.category}</span><span class="font-bold ${difficultyColor}">${scenario.difficulty}</span></div>
+                <div class="p-5 bg-gray-50 border-l-4 border-gray-500 rounded-lg shadow-inner">
+                    <p class="font-bold text-gray-800 mb-1">Case Study:</p>
                     <p class="text-gray-700 whitespace-pre-wrap">${scenario.situation}</p>
                 </div>
-                <div class="p-5 bg-gray-50 border-l-4 border-gray-500 rounded-lg shadow-inner">
-                    <p class="font-bold text-gray-800 mb-1">Your Initial Emotional Response (Bias Check):</p>
-                    <p class="text-gray-700">${scenario.yourFeeling}</p>
+                <div class="p-5 bg-emerald-50 border-l-4 border-emerald-500 rounded-lg">
+                    <p class="text-gray-700 font-semibold text-center">On the next screen, you will be assigned a role. Your task is to analyze the situation from that character's perspective.</p>
                 </div>
-                <p class="text-gray-600 pt-4 font-semibold text-center">Your task is to overcome this initial bias and inhabit the world of the <b class="text-emerald-700">${scenario.empathyTarget}</b>.</p>
-                <button onclick="changePhase('PERSPECTIVE_SWITCH')" class="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:bg-emerald-700 transition duration-150 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-300">
-                    Assume Perspective →
-                </button>
+                <button onclick="changePhase('PERSPECTIVE_SWITCH')" class="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:bg-emerald-700 transition duration-150 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-300">Continue to Assignment →</button>
             </div>
         `;
     }
     
     function renderLoadingScreen() {
-        return `
-            <div class="text-center p-10 space-y-4">
-                <div class="spinner animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-emerald-500 mx-auto"></div>
-                <h2 class="text-2xl font-bold text-gray-800">Running Analysis...</h2>
-                <p class="text-gray-600">The local analysis engine is processing your response.</p>
-            </div>
-        `;
+        return `<div class="text-center p-10 space-y-4"><div class="spinner animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-emerald-500 mx-auto"></div><h2 class="text-2xl font-bold text-gray-800">Running Analysis...</h2><p class="text-gray-600">The local analysis engine is processing your response.</p></div>`;
     }
 
     function renderPerspectiveSwitchForm(scenario) {
         return `
             <div class="space-y-6">
-                <button onclick="changePhase('SITUATION')" class="text-sm font-medium text-emerald-500 hover:text-emerald-700 transition duration-150 flex items-center">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    Back to Case Briefing
-                </button>
+                <button onclick="changePhase('SITUATION')" class="text-sm font-medium text-emerald-500 hover:text-emerald-700 transition duration-150 flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>Back to Case Study</button>
                 <form id="perspective-form" onsubmit="handlePerspectiveSubmit(event)">
-                    <h2 class="text-2xl font-bold mb-2 text-gray-800">Task: Assume Perspective</h2>
-                    <p class="text-gray-600 mb-6 font-medium">Your goal is to write from the perspective of the <b class="text-emerald-700">${scenario.empathyTarget}</b>. Use "I" and "me" to articulate their inner world.</p>
-                    
+                    <h2 class="text-2xl font-bold mb-2 text-gray-800">Your Assignment</h2>
+                    <p class="text-gray-600 mb-6 font-medium">Assume the perspective of the <b class="text-emerald-700">${scenario.empathyTarget}</b>. Use "I" and "me" to articulate their inner world.</p>
                     <div class="mb-6 bg-emerald-50 p-4 rounded-xl border-l-4 border-emerald-400">
                         <label class="block text-lg font-bold text-gray-700 mb-2">1. What is my core fear, need, or motivation?</label>
                         <textarea id="task-story" name="task-story" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" rows="4" placeholder="As the ${scenario.empathyTarget}, I feel... because I am afraid of..."></textarea>
                         <p class="text-sm text-gray-500 mt-1">Focus on situational pressures, not personality flaws.</p>
                     </div>
-
                     <div class="mb-6 bg-emerald-50 p-4 rounded-xl border-l-4 border-emerald-400">
                         <label class="block text-lg font-bold text-gray-700 mb-2">2. From my perspective, why is my action justified?</label>
                         <textarea id="task-validation" name="task-validation" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" rows="3" placeholder="My action makes sense to me because it is the only way to..."></textarea>
                         <p class="text-sm text-gray-500 mt-1">Explain the rationalization that makes the action seem necessary to them.</p>
                     </div>
-
-                    <button type="submit" id="submit-button" class="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:bg-emerald-700 transition duration-150 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-300">
-                        Submit for Analysis
-                    </button>
+                    <button type="submit" id="submit-button" class="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:bg-emerald-700 transition duration-150 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-300">Submit for Analysis</button>
                 </form>
             </div>
         `;
@@ -251,8 +180,6 @@
             <div class="space-y-6 text-center">
                 <h2 class="text-3xl font-bold text-emerald-700">${title}</h2>
                 <p class="text-xl text-gray-700">Empathy Score: <span class="text-4xl font-extrabold ${scoreColor}">${score}%</span></p>
-                
-                <!-- Detailed Feedback Box -->
                 <div class="text-left space-y-4">
                     <h3 class="font-bold text-xl text-gray-800 text-center border-b pb-2">Performance Analysis</h3>
                     <div class="p-5 bg-green-50 border-l-4 border-green-500 rounded-xl">
@@ -264,17 +191,12 @@
                         <ul class="list-disc list-inside text-red-900 space-y-1">${areasForImprovement.length > 0 ? areasForImprovement.map(a => `<li>${a}</li>`).join('') : '<li>No specific areas for improvement identified. Great work!</li>'}</ul>
                     </div>
                 </div>
-
-                <!-- Ideal Resolution -->
                 <div class="p-5 sm:p-6 bg-indigo-50 border-l-4 border-indigo-600 rounded-xl text-left shadow-lg">
                     <p class="font-bold text-xl text-indigo-800 mb-2">Actionable Strategy: An Empathy-Informed Response</p>
                     <p class="text-sm text-indigo-700 italic mb-2">An effective response addresses the other person's underlying goal: <b>${goal}</b></p>
                     <p class="text-gray-700"><b>Example Response:</b> "${resolution}"</p>
                 </div>
-                
-                <button onclick="changePhase('SELECTION')" class="w-full py-3 px-4 mt-4 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition duration-150 transform focus:outline-none focus:ring-4 focus:ring-emerald-300">
-                    ← Back to Scenario Library
-                </button>
+                <button onclick="changePhase('SELECTION')" class="w-full py-3 px-4 mt-4 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition duration-150 transform focus:outline-none focus:ring-4 focus:ring-emerald-300">← Back to Scenario Library</button>
             </div>
         `;
     }
@@ -309,52 +231,59 @@
     }
 
     /**
-     * [UPGRADED] Advanced local analysis engine.
-     * This remains free and serverless, providing instant, private analysis.
+     * [FINAL UPGRADE] Advanced local analysis engine.
+     * Provides personalized, descriptive feedback without external APIs.
      */
     async function calculateEmpathyScore(scenario, story, validation) {
-        await new Promise(resolve => setTimeout(resolve, 750)); // Simulate processing time
+        await new Promise(resolve => setTimeout(resolve, 750));
 
         const userInput = (story + " " + validation).toLowerCase();
         let score = 0;
         let analysis = { positives: [], areasForImprovement: [] };
 
-        // 1. Depth of Insight (50 points)
+        // 1. Perspective Check (Structural Analysis)
+        if (!userInput.includes(' i ') && !userInput.includes(' my ') && !userInput.includes(' me ')) {
+            analysis.areasForImprovement.push(`<b>Perspective Error:</b> You did not write from the first-person ("I", "me") perspective. The goal is to inhabit the character, not describe them.`);
+        } else {
+            analysis.positives.push(`<b>Correct Perspective:</b> You successfully wrote from the first-person perspective of the assigned character.`);
+        }
+
+        // 2. Depth of Insight (50 points)
         const idealKeywords = scenario.idealPerspective.keywords;
         let foundKeywords = idealKeywords.filter(kw => userInput.includes(kw.toLowerCase()));
         let depthScore = Math.min(50, (foundKeywords.length / (idealKeywords.length / 1.5)) * 50);
         score += depthScore;
 
         if (depthScore > 40) {
-            analysis.positives.push(`<b>Excellent insight:</b> You correctly identified the core motivations, such as <b>"${foundKeywords[0]}"</b>.`);
+            analysis.positives.push(`<b>Excellent Insight:</b> Your response correctly identified core motivations like <b>"${foundKeywords[0]}"</b> and <b>"${foundKeywords[1]}"</b>.`);
         } else if (depthScore > 20) {
-            analysis.positives.push(`<b>Good start:</b> You touched on some of the underlying issues.`);
-            analysis.areasForImprovement.push(`<b>Go deeper:</b> Your response could be strengthened by focusing more on the character's specific situational fears, like <b>"${idealKeywords[0]}"</b> or <b>"${idealKeywords[1]}"</b>.`);
+            analysis.positives.push(`<b>Good Start:</b> You touched on some of the underlying issues.`);
+            analysis.areasForImprovement.push(`<b>Go Deeper:</b> To improve, focus more on the character's specific situational fears, such as <b>"${idealKeywords[0]}"</b> or <b>"${idealKeywords[1]}"</b>.`);
         } else {
-            analysis.areasForImprovement.push(`<b>Lacks depth:</b> Your analysis was superficial. The goal is to uncover the hidden situational pressures, such as <b>"${idealKeywords[0]}"</b>, rather than just describing the action.`);
+            analysis.areasForImprovement.push(`<b>Lacks Depth:</b> Your analysis was superficial. The key is to uncover hidden pressures like <b>"${idealKeywords[0]}"</b>, rather than just describing the character's actions.`);
         }
 
-        // 2. Freedom from Bias (30 points)
+        // 3. Freedom from Bias (30 points)
         const avoidKeywords = scenario.idealPerspective.avoid;
         let foundAvoids = avoidKeywords.filter(kw => userInput.includes(kw.toLowerCase()));
-        let biasScore = 30 - (foundAvoids.length * 20); // Heavier penalty
+        let biasScore = 30 - (foundAvoids.length * 20);
         biasScore = Math.max(0, biasScore);
         score += biasScore;
 
         if (foundAvoids.length > 0) {
-            analysis.areasForImprovement.push(`<b>Biased language detected:</b> Using words like <b>"${foundAvoids.join('", "')}"</b> shows you are still judging the character's personality rather than understanding their situation. This is a failure to decenter.`);
+            analysis.areasForImprovement.push(`<b>Biased Language Detected:</b> You used judgmental words like <b>"${foundAvoids.join('", "')}"</b>. This shows you are still judging the character's personality instead of understanding their situation.`);
         } else {
-            analysis.positives.push(`<b>Objective perspective:</b> You successfully avoided judgmental language and focused on the situation.`);
+            analysis.positives.push(`<b>Objective Analysis:</b> You successfully avoided judgmental language and focused on the situation.`);
         }
 
-        // 3. Clarity & Rationality (20 points)
+        // 4. Clarity & Rationality (20 points)
         let clarityScore = 10;
         if (story.length > 25 && validation.length > 25) clarityScore += 10;
         score += clarityScore;
         if (clarityScore < 20) {
-            analysis.areasForImprovement.push(`<b>Be more descriptive:</b> Your responses were very brief. Try to elaborate more on the character's internal thoughts and justifications to build a stronger case.`);
+            analysis.areasForImprovement.push(`<b>Be More Descriptive:</b> Your responses were brief. Elaborate more on the character's internal thoughts to build a stronger, more believable justification.`);
         } else {
-            analysis.positives.push(`<b>Clear articulation:</b> Your response was well-articulated and provided a clear line of reasoning.`)
+            analysis.positives.push(`<b>Clear Articulation:</b> Your response was well-articulated and provided a clear line of reasoning for the character's actions.`);
         }
 
         score = Math.round(Math.max(0, Math.min(100, score)));
@@ -395,13 +324,11 @@
         setTimeout(() => msgBox.classList.add('hidden'), 5000);
     }
 
-    // Expose functions globally for inline HTML events
     window.changePhase = changePhase;
     window.startScenario = startScenario;
     window.filterScenarios = filterScenarios;
     window.handlePerspectiveSubmit = handlePerspectiveSubmit;
 
-    // Initialize the app
     window.onload = () => renderApp();
 
 </script>
