@@ -1,6 +1,6 @@
 # Agni's Empathy Builder
 
-This is a professional, standalone, single-file web application designed to help users develop empathy and "Theory of Mind" by analyzing complex social scenarios relevant to the Indian context.
+This is a professional, standalone web application designed to help users develop empathy and "Theory of Mind" by analyzing complex social scenarios relevant to the Indian context.
 
 ## How it Works
 
@@ -17,13 +17,41 @@ The application provides a detailed analysis with a score, a list of positives, 
 
 -   **Fully Offline & Deployable:** Runs entirely in the browser with no external API calls, making it fast, private, and easy to host.
 -   **Advanced Local Analysis:** Uses a sophisticated JavaScript-based engine for instant, detailed feedback.
--   **Rich Scenarios:** Includes a wide range of detailed scenarios across 15 different categories.
+-   **Expandable Scenarios:** The scenario library is stored in a separate, easy-to-edit `scenarios.js` file.
 -   **Professional UI:** Clean, responsive design that works on both desktop and mobile browsers.
 -   **Filtering & Search:** Users can easily find scenarios by category, difficulty, or keywords.
 
 ## How to Run Locally
 
 No build process or server is required. Simply open the `index.html` file in any modern web browser.
+
+## How to Add New Scenarios
+
+The application is designed to be easily expandable.
+
+1.  **Open `scenarios.js`:** This file contains the entire library of scenarios.
+2.  **Add a New Scenario Object:** At the end of the `ALL_SCENARIOS` array, add a new JavaScript object.
+
+**Scenario Template:**
+```javascript
+{
+    id: 999, // IMPORTANT: Use a new, unique number!
+    title: "Your New Scenario Title",
+    category: "Family & Home", // Must be one of the existing categories
+    difficulty: "Easy", // "Easy", "Medium", or "Hard"
+    empathyTarget: "The character to empathize with", // e.g., "Your colleague", "The shopkeeper"
+    situation: "A detailed description of the situation from the user's point of view.",
+    yourFeeling: "The user's initial, biased emotional reaction.",
+    otherAction: "The specific action the other person took.",
+    idealPerspective: {
+        keywords: ["fear", "stress", "anxiety"], // Keywords for a good empathetic response
+        avoid: ["selfish", "lazy", "stupid"], // Judgmental words to avoid
+        goal: "A short summary of the empathetic insight.",
+        resolution: "An example of an ideal, empathy-informed response."
+    }
+}
+```
+3.  **Save the File:** Save your changes to `scenarios.js`. The application will automatically include the new scenarios the next time it is loaded.
 
 ## How to Deploy (for free)
 

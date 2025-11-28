@@ -51,7 +51,8 @@
 </div>
 
 <script type="module">
-    // --- Configuration and Data ---
+    // --- Main Application Logic ---
+    import { ALL_SCENARIOS } from './scenarios.js';
 
     let currentPhase = 'WELCOME';
     let currentScenario = null;
@@ -63,42 +64,6 @@
         "Consumer & Service Issues", "Environmental & Civic Duty", "Relationship & Marital Stress"
     ];
     const DIFFICULTIES = ["All", "Easy", "Medium", "Hard"];
-    
-    // --- SCENARIO DATA (Professional Overhaul) ---
-    const ALL_SCENARIOS = [
-        // Note: Scenarios have been made more detailed and include the 'empathyTarget' field.
-        // Due to the extreme length of a full 225-scenario list, this is a representative sample demonstrating the new structure.
-        // The logic is built to handle the full list.
-        
-        // ----------------------------------------------------------------------------------
-        // 1. Family & Home
-        // ----------------------------------------------------------------------------------
-        { 
-            id: 101, title: "The Silent Meal", category: "Family & Home", difficulty: "Easy", 
-            empathyTarget: "Your younger sibling",
-            situation: "You've just come home from a long day at work, looking forward to a peaceful dinner. However, for the last two days, your younger sibling, a final year student buried in competitive exam preparation, has been completely silent at the dinner table. They offer only one-word answers, their eyes glued to their plate. When you tried to share a funny story from your day to lighten the mood, they abruptly got up and walked away, leaving you feeling ignored and slightly foolish.", 
-            yourFeeling: "Ignored, annoyed, and concerned.", 
-            otherAction: "Being silent and withdrawn at dinner.", 
-            idealPerspective: { keywords: ["fear of failure", "exam stress", "overwhelmed", "anxiety", "guilt over not studying", "mentally exhausted"], avoid: ["sulking", "rude", "disrespectful", "childish"], goal: "Recognize their behavior is a symptom of intense internal pressure, not a personal attack on you.", resolution: "Instead of confronting them at the table, approach them later with a soft, non-demanding tone: 'Hey, I noticed you seem really stressed. No pressure to talk, but I want you to know I'm here for you if you need anything at all, even if it's just a cup of tea.'" } 
-        },
-        { 
-            id: 106, title: "Unannounced Guests", category: "Family & Home", difficulty: "Medium", 
-            empathyTarget: "Your spouse",
-            situation: "You work from home and have a critical project deadline. This morning, your spouse’s distant aunt and uncle from their village arrived unannounced, carrying luggage for a week-long stay. Your small 2BHK apartment feels instantly crowded. You see the stress on your spouse's face; they are caught between the cultural obligation to be a good host and the reality of the disruption. When you suggest finding them a hotel, your spouse gets defensive, fearing it will be a grave insult to their elders.", 
-            yourFeeling: "Privacy violated, resentful, and anxious about your work.", 
-            otherAction: "Insisting on hosting unannounced relatives despite the inconvenience.", 
-            idealPerspective: { keywords: ["social obligation", "fear of insulting elders", "cultural duty", "shame", "trapped", "no good options"], avoid: ["weak", "inconsiderate", "unreasonable"], goal: "Understand your spouse is not choosing their relatives over you; they are trapped in a difficult cultural bind.", resolution: "Address your spouse privately and collaboratively: 'I see how much pressure you're under, and I'm not angry at you. We are a team. Let's figure out a plan together to manage this. Can we set some boundaries, like quiet hours for my work?'" } 
-        },
-        { 
-            id: 111, title: "Kitchen Control", category: "Family & Home", difficulty: "Hard", 
-            empathyTarget: "Your mother-in-law",
-            situation: "You live in a joint family setup. After a full day at your job, you find cooking to be a creative outlet. However, your mother-in-law constantly hovers in the kitchen, criticizing your methods. 'That's too much oil, you'll make us sick.' 'Why use packaged masala when I can grind it fresh?' 'You're holding the knife all wrong.' Her comments feel like a relentless attack on your competence, turning your sanctuary into a battlefield.", 
-            yourFeeling: "Disrespected, defensive, and constantly on edge.", 
-            otherAction: "Constant criticism of your cooking.", 
-            idealPerspective: { keywords: ["loss of identity", "feeling useless", "fear of irrelevance", "maintaining control", "legacy", "anxiety about health"], avoid: ["controlling", "meddling", "tyrannical", "malicious"], goal: "See her criticism not as an attack on you, but as a desperate attempt to hold onto her role and relevance in the household.", resolution: "Validate her role before setting a boundary: 'Mummy-ji, your recipes are the heart of this home. I want to learn them properly. Could we make Sundays our special cooking day where you teach me? On weeknights, please trust me to manage, as I'm often short on time after work.'" } 
-        },
-        // ... More scenarios would be added here following the same detailed structure.
-    ];
 
     // --- Core UI Rendering Functions ---
 
@@ -221,7 +186,7 @@
                     <p class="font-bold text-gray-800 mb-1">Your Initial Emotional Response (Bias Check):</p>
                     <p class="text-gray-700">${scenario.yourFeeling}</p>
                 </div>
-                <p class="text-gray-600 pt-4 font-semibold text-center">Your task is to overcome this initial bias and inhabit the world of the other person.</p>
+                <p class="text-gray-600 pt-4 font-semibold text-center">Your task is to overcome this initial bias and inhabit the world of the <b class="text-emerald-700">${scenario.empathyTarget}</b>.</p>
                 <button onclick="changePhase('PERSPECTIVE_SWITCH')" class="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:bg-emerald-700 transition duration-150 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-300">
                     Assume Perspective →
                 </button>
@@ -289,13 +254,14 @@
                 
                 <!-- Detailed Feedback Box -->
                 <div class="text-left space-y-4">
+                    <h3 class="font-bold text-xl text-gray-800 text-center border-b pb-2">Performance Analysis</h3>
                     <div class="p-5 bg-green-50 border-l-4 border-green-500 rounded-xl">
-                        <h3 class="font-bold text-lg text-green-800 mb-2">Positives</h3>
-                        <ul class="list-disc list-inside text-green-900 space-y-1">${positives.map(p => `<li>${p}</li>`).join('') || '<li>No specific positives identified.</li>'}</ul>
+                        <h4 class="font-bold text-lg text-green-800 mb-2">Positives</h4>
+                        <ul class="list-disc list-inside text-green-900 space-y-1">${positives.length > 0 ? positives.map(p => `<li>${p}</li>`).join('') : '<li>No specific positives identified in this analysis.</li>'}</ul>
                     </div>
                     <div class="p-5 bg-red-50 border-l-4 border-red-500 rounded-xl">
-                        <h3 class="font-bold text-lg text-red-800 mb-2">Areas for Improvement</h3>
-                        <ul class="list-disc list-inside text-red-900 space-y-1">${areasForImprovement.map(a => `<li>${a}</li>`).join('') || '<li>No specific areas for improvement identified.</li>'}</ul>
+                        <h4 class="font-bold text-lg text-red-800 mb-2">Areas for Improvement</h4>
+                        <ul class="list-disc list-inside text-red-900 space-y-1">${areasForImprovement.length > 0 ? areasForImprovement.map(a => `<li>${a}</li>`).join('') : '<li>No specific areas for improvement identified. Great work!</li>'}</ul>
                     </div>
                 </div>
 
@@ -344,6 +310,7 @@
 
     /**
      * [UPGRADED] Advanced local analysis engine.
+     * This remains free and serverless, providing instant, private analysis.
      */
     async function calculateEmpathyScore(scenario, story, validation) {
         await new Promise(resolve => setTimeout(resolve, 750)); // Simulate processing time
@@ -370,7 +337,7 @@
         // 2. Freedom from Bias (30 points)
         const avoidKeywords = scenario.idealPerspective.avoid;
         let foundAvoids = avoidKeywords.filter(kw => userInput.includes(kw.toLowerCase()));
-        let biasScore = 30 - (foundAvoids.length * 15);
+        let biasScore = 30 - (foundAvoids.length * 20); // Heavier penalty
         biasScore = Math.max(0, biasScore);
         score += biasScore;
 
@@ -382,10 +349,12 @@
 
         // 3. Clarity & Rationality (20 points)
         let clarityScore = 10;
-        if (story.length > 20 && validation.length > 20) clarityScore += 10;
+        if (story.length > 25 && validation.length > 25) clarityScore += 10;
         score += clarityScore;
         if (clarityScore < 20) {
-            analysis.areasForImprovement.push(`<b>Be more descriptive:</b> Your responses were very brief. Try to elaborate more on the character's internal thoughts and justifications.`);
+            analysis.areasForImprovement.push(`<b>Be more descriptive:</b> Your responses were very brief. Try to elaborate more on the character's internal thoughts and justifications to build a stronger case.`);
+        } else {
+            analysis.positives.push(`<b>Clear articulation:</b> Your response was well-articulated and provided a clear line of reasoning.`)
         }
 
         score = Math.round(Math.max(0, Math.min(100, score)));
